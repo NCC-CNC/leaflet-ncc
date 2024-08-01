@@ -983,7 +983,7 @@ methods.setGroupOptions = function(group, options) {
   this.showHideGroupsOnZoom();
 };
 
-methods.addRasterImage = function(uri, bounds, layerId, group, options) {
+methods.addRasterImage = function(uri, bounds, layerId, group, options, pane) {
   // uri is a data URI containing an image. We want to paint this image as a
   // layer at (top-left) bounds[0] to (bottom-right) bounds[1].
 
@@ -1104,10 +1104,14 @@ methods.addRasterImage = function(uri, bounds, layerId, group, options) {
   };
   img.src = uri;
 
-  let canvasTiles = L.gridLayer(Object.assign({}, options, {
-    detectRetina: true,
-    async: true
-  }));
+  let canvasTilesOptions = structuredClone(options);
+  canvasTilesOptions.detectRetina = true;
+  canvasTilesOptions.async = true;
+  if (typeof(pane) == "string") {
+    canvasTilesOptions.pane = pane;
+  }
+
+  let canvasTiles = L.gridLayer(Object.assign({}, canvasTilesOptions);
 
   // NOTE: The done() function MUST NOT be invoked until after the current
   // tick; done() looks in Leaflet's tile cache for the current tile, and
@@ -1354,7 +1358,19 @@ methods.removeSelect = function() {
 
 
 
-methods.createMapPane = function (name, zIndex) {
+methods.createMapPane = function (name, zIndex, visible) {
   this.createPane(name);
   this.getPane(name).style.zIndex = zIndex;
+  if (typeof(visible) === "boolean") {
+    this.getPane(name).style.visibility = visible ? "visible" : "hidden";
+  }
+};
+
+methods.updateMapPane = function (name, zIndex, visible) {
+  if (typeof(zIndex) === "number") {
+    this.getPane(name).style.zIndex = zIndex;
+  }
+  if (typeof(visible) === "boolean") {
+    this.getPane(name).style.visibility = visible ? "visible" : "hidden";
+  }
 };

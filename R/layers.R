@@ -218,6 +218,7 @@ epsg3857 <- "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y
 #' @param layerId the layer id
 #' @param group the name of the group this raster image should belong to (see
 #'   the same parameter under [addTiles()])
+#' @param pane the name of the map pane this raster image should belong to
 #' @param project if `TRUE`, automatically project `x` to the map
 #'   projection expected by Leaflet (`EPSG:3857`); if `FALSE`, it's
 #'   the caller's responsibility to ensure that `x` is already projected,
@@ -257,6 +258,7 @@ addRasterImage <- function(
   attribution = NULL,
   layerId = NULL,
   group = NULL,
+  pane = NULL,
   project = TRUE,
   method = c("auto", "bilinear", "ngb"),
   maxBytes = 4 * 1024 * 1024,
@@ -272,6 +274,7 @@ addRasterImage <- function(
       attribution = attribution,
       layerId = layerId,
       group = group,
+      pane = pane,
       project = project,
       method = method,
       maxBytes = maxBytes,
@@ -287,6 +290,7 @@ addRasterImage <- function(
       attribution = attribution,
       layerId = layerId,
       group = group,
+      pane = pane,
       project = project,
       method = method,
       maxBytes = maxBytes,
@@ -395,6 +399,7 @@ addRasterImage_RasterLayer <- function(
   attribution = NULL,
   layerId = NULL,
   group = NULL,
+  pane = NULL,
   project = TRUE,
   method = c("auto", "bilinear", "ngb"),
   maxBytes = 4 * 1024 * 1024,
@@ -457,7 +462,7 @@ addRasterImage_RasterLayer <- function(
     list(raster::ymin(bounds), raster::xmax(bounds))
   )
 
-  invokeMethod(map, data, "addRasterImage", uri, latlng, layerId, group, options) %>%
+  invokeMethod(map, data, "addRasterImage", uri, latlng, layerId, group, options, pane) %>%
     expandLimits(
       c(raster::ymin(bounds), raster::ymax(bounds)),
       c(raster::xmin(bounds), raster::xmax(bounds))
@@ -472,6 +477,7 @@ addRasterImage_SpatRaster <- function(
   attribution = NULL,
   layerId = NULL,
   group = NULL,
+  pane = NULL,
   project = TRUE,
   method = c("auto", "bilinear", "ngb"),
   maxBytes = 4 * 1024 * 1024,
@@ -565,7 +571,7 @@ addRasterImage_SpatRaster <- function(
     list(terra::ymin(bounds), terra::xmax(bounds))
   )
 
-  invokeMethod(map, data, "addRasterImage", uri, latlng, layerId, group, options) %>%
+  invokeMethod(map, data, "addRasterImage", uri, latlng, layerId, group, options, pane) %>%
     expandLimits(
       c(terra::ymin(bounds), terra::ymax(bounds)),
       c(terra::xmin(bounds), terra::xmax(bounds))
