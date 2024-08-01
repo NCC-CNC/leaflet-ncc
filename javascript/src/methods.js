@@ -1111,7 +1111,7 @@ methods.addRasterImage = function(uri, bounds, layerId, group, options, pane) {
     canvasTilesOptions.pane = pane;
   }
 
-  let canvasTiles = L.gridLayer(Object.assign({}, canvasTilesOptions);
+  let canvasTiles = L.gridLayer(Object.assign({}, canvasTilesOptions));
 
   // NOTE: The done() function MUST NOT be invoked until after the current
   // tick; done() looks in Leaflet's tile cache for the current tile, and
