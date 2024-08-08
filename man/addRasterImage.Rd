@@ -13,6 +13,7 @@ addRasterImage(
   attribution = NULL,
   layerId = NULL,
   group = NULL,
+  pane = NULL,
   project = TRUE,
   method = c("auto", "bilinear", "ngb"),
   maxBytes = 4 * 1024 * 1024,
@@ -41,6 +42,8 @@ it has RGB channels.}
 
 \item{group}{the name of the group this raster image should belong to (see
 the same parameter under \code{\link[=addTiles]{addTiles()}})}
+
+\item{pane}{the name of the map pane this raster image should belong to}
 
 \item{project}{if \code{TRUE}, automatically project \code{x} to the map
 projection expected by Leaflet (\code{EPSG:3857}); if \code{FALSE}, it's

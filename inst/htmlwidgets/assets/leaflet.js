@@ -2030,11 +2030,11 @@ methods.addLegend = function (options) {
 
       var tickOffset = singleBinHeight / singleBinPct * options.extra.p_1;
       gradSpan = (0, _jquery2["default"])("<span/>").css({
-        "background": "linear-gradient(" + colors + ")",
-        "opacity": options.opacity,
-        "height": totalHeight + "px",
-        "width": "18px",
-        "display": "block",
+        background: "linear-gradient(" + colors + ")",
+        opacity: options.opacity,
+        height: totalHeight + "px",
+        width: "18px",
+        display: "block",
         "margin-top": vMargin + "px"
       });
       var leftDiv = (0, _jquery2["default"])("<div/>").css("float", "left"),
@@ -2073,7 +2073,7 @@ methods.addLegend = function (options) {
       });
 
       if (options.na_color && _jquery2["default"].inArray(options.na_label, labels) < 0) {
-        (0, _jquery2["default"])(div).append("<div><i style=\"" + "background:" + options.na_color + ";opacity:" + options.opacity + ";margin-right:" + labelPadding + "px" + ";\"></i>" + options.na_label + "</div>");
+        (0, _jquery2["default"])(div).append('<div><i style="' + "background:" + options.na_color + ";opacity:" + options.opacity + ";margin-right:" + labelPadding + "px" + ';"></i>' + options.na_label + "</div>");
       }
     } else {
       if (options.na_color && _jquery2["default"].inArray(options.na_label, labels) < 0) {
@@ -2082,13 +2082,13 @@ methods.addLegend = function (options) {
       }
 
       for (var i = 0; i < colors.length; i++) {
-        legendHTML += "<i style=\"background:" + colors[i] + ";opacity:" + options.opacity + "\"></i> " + labels[i] + "<br>";
+        legendHTML += '<i style="background:' + colors[i] + ";opacity:" + options.opacity + '"></i> ' + labels[i] + "<br>";
       }
 
       div.innerHTML = legendHTML;
     }
 
-    if (options.title) (0, _jquery2["default"])(div).prepend("<div style=\"margin-bottom:3px\"><strong>" + options.title + "</strong></div>");
+    if (options.title) (0, _jquery2["default"])(div).prepend('<div style="margin-bottom:3px"><strong>' + options.title + "</strong></div>");
     return div;
   };
 
@@ -2221,14 +2221,14 @@ function setupShowHideGroupsOnZoom(map) {
       if (visible) {
         map.addLayer(layer);
         map.fire("groupadd", {
-          "name": group,
-          "layer": layer
+          name: group,
+          layer: layer
         });
       } else {
         map.removeLayer(layer);
         map.fire("groupremove", {
-          "name": group,
-          "layer": layer
+          name: group,
+          layer: layer
         });
       }
     }
@@ -2266,7 +2266,7 @@ methods.setGroupOptions = function (group, options) {
   this.showHideGroupsOnZoom();
 };
 
-methods.addRasterImage = function (uri, bounds, layerId, group, options) {
+methods.addRasterImage = function (uri, bounds, layerId, group, options, pane) {
   // uri is a data URI containing an image. We want to paint this image as a
   // layer at (top-left) bounds[0] to (bottom-right) bounds[1].
   // We can't simply use ImageOverlay, as it uses bilinear scaling which looks
@@ -2385,11 +2385,15 @@ methods.addRasterImage = function (uri, bounds, layerId, group, options) {
   };
 
   img.src = uri;
+  var canvasTilesOptions = JSON.parse(JSON.stringify(options));
+  canvasTilesOptions.detectRetina = true;
+  canvasTilesOptions.async = true;
 
-  var canvasTiles = _leaflet2["default"].gridLayer(Object.assign({}, options, {
-    detectRetina: true,
-    async: true
-  })); // NOTE: The done() function MUST NOT be invoked until after the current
+  if (typeof pane == "string") {
+    canvasTilesOptions.pane = pane;
+  }
+
+  var canvasTiles = _leaflet2["default"].gridLayer(Object.assign({}, canvasTilesOptions)); // NOTE: The done() function MUST NOT be invoked until after the current
   // tick; done() looks in Leaflet's tile cache for the current tile, and
   // since it's still being constructed, it won't be found.
 
@@ -2619,9 +2623,23 @@ methods.removeSelect = function () {
   }
 };
 
-methods.createMapPane = function (name, zIndex) {
+methods.createMapPane = function (name, zIndex, visible) {
   this.createPane(name);
   this.getPane(name).style.zIndex = zIndex;
+
+  if (typeof visible === "boolean") {
+    this.getPane(name).style.visibility = visible ? "visible" : "hidden";
+  }
+};
+
+methods.updateMapPane = function (name, zIndex, visible) {
+  if (typeof zIndex === "number") {
+    this.getPane(name).style.zIndex = zIndex;
+  }
+
+  if (typeof visible === "boolean") {
+    this.getPane(name).style.visibility = visible ? "visible" : "hidden";
+  }
 };
 
 
